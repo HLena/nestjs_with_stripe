@@ -13,6 +13,9 @@ export class StripeService {
     const paymentIntent = await this.stripe.paymentIntents.create({
       amount,
       currency,
+      payment_method_types: ['card'],
+      payment_method: 'pm_card_visa',
+      confirm: true,
     });
     return paymentIntent;
   }
