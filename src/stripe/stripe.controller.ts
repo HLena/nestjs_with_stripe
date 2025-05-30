@@ -42,26 +42,24 @@ export class StripeController {
 
   @Post('webhook')
   handleWebhook(
-    @Req() req: { rawBody: Buffer },
+    @Req() req: Request,
     @Res() res: Response,
     @Headers('stripe-signature') signature: string,
   ) {
-    console.log('RawBody recibido:', req.rawBody?.toString('utf8'));
-    // console.log('Headers:', req.headers);
-    if (!signature) {
-      this.logger.error('Missing stripe-signature header');
-      return res
-        .status(HttpStatus.BAD_REQUEST)
-        .send('Missing stripe-signature header');
-    }
-    if (!req.rawBody) {
-      this.logger.error('Missing rawBody');
-      return res.status(HttpStatus.BAD_REQUEST).send('Missing request body');
-    }
+    // if (!signature) {
+    //   this.logger.error('Missing stripe-signature header');
+    //   return res
+    //     .status(HttpStatus.BAD_REQUEST)
+    //     .send('Missing stripe-signature header');
+    // }
+    // if (!req.body) {
+    //   this.logger.error('Missing rawBody');
+    //   return res.status(HttpStatus.BAD_REQUEST).send('Missing request body');
+    // }
 
     try {
       const event = this.stripe.webhooks.constructEvent(
-        req.rawBody,
+        req.body as Buffer,
         signature,
         this.endpointSecret,
       );

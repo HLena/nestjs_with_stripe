@@ -3,20 +3,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bodyParser: false });
+  const app = await NestFactory.create(AppModule);
 
-  // Middleware exclusivo para la ruta del webhook
-  app.use(
-    '/stripe/webhook',
-    bodyParser.raw({ type: 'application/json' }), // Preserva el cuerpo crudo
-    (req, res, next) => {
-      req.rawBody = req.body; // Almacena el rawBody
-      req.body = {}; // Evita conflictos
-      next();
-    },
-  );
+  //   app.use('/stripe/webhook',
+  //   bodyParser.raw({ type: 'application/json' }), // 1️⃣
+  //   (req, res, next) => {
+  //     req.rawBody = req.body; // 2️⃣
+  //     req.body = {}; // 3️⃣
+  //     next();
+  //   }
+  // );
 
-  app.use(bodyParser.json());
+  app.use('/stripe/webhook', bodyParser.raw({ type: 'application/json' }));
 
   await app.listen(3000);
 }
